@@ -2,9 +2,6 @@
  
 A multi-strategy quantitative trading framework built for the **Zenith Problem Statement (ALPHA)** at **Takneek 2026**, IIT Kanpur. It allocates capital across a 20-stock universe using six independent alpha sleeves, a cost-aware Mean-CVaR allocator, a machine-learning risk overlay and an event-driven backtester.
  
-> Team **Pool Aryans** · Takneek 2026 · Indian Institute of Technology Kanpur
- 
----
  
 ## Highlights
  
@@ -38,18 +35,11 @@ Trade a universe of **20 equities** starting with **INR 2,000,000** (20 x 100,00
 - a maximum of **7 deployed strategies**
 - a **0.1% fee** on the gross value of every buy and sell
 - long exposure and short exposure each capped at the current portfolio value
-- a stock-split rule for corporate actions
-The framework treats this as a constrained, dynamic portfolio-allocation problem rather than a hunt for one "best" indicator. Several economically different alpha mechanisms compete for capital under a single risk and execution layer.
- 
+- a stock-split rule for corporate actions 
 ---
  
 ## Architecture
- 
-```
-Data -> Features -> Alpha -> Allocation -> Risk -> Execution -> PnL
-```
- 
-Signal generation, capital allocation and execution are kept separate:
+
  
 1. **Data integrity:** raw prices drive execution and PnL; a corporate-action-adjusted series drives all features.
 2. **Features:** range-based volatility, liquidity, an OHLCV order-flow proxy, Tsallis tail statistics and Hurst exponents.
@@ -92,58 +82,18 @@ Signal generation, capital allocation and execution are kept separate:
 - A no-trade band skips small rebalances unless they reduce risk.
 - Long and short exposure are checked at both open and close, and reduced if they approach the limit.
 - Fixed random seed and no wall-clock-dependent logic, so runs are reproducible.
----
- 
-## Robustness
- 
-- **Walk-forward separation:** LightGBM, cointegration, hedge ratios and GARCH parameters are estimated on earlier data and applied to unseen blocks. Mean-CVaR uses only sleeve returns already realised.
-- **Ideas that were removed:** a short-horizon order-flow scalp (turnover consumed the edge after fees) and a first Tsallis design that traded *changes* in `q` (replaced by trading the level of asymmetric tail risk).
-- **Leave-one-out attribution:** each sleeve is removed in turn and the allocator redistributes its capital, to test whether the sleeve genuinely helps the combined portfolio.
----
- 
-## Limitations
- 
-- OHLCV data cannot show queue position, bid-ask spread or true order book imbalance, so the flow variables are **proxies**.
-- Cointegrating relationships can break, and Hurst and tail parameters are noisy finite-window estimates.
-- The backtester models fees, delay, whole shares, cash and exposure limits but **not endogenous market impact**.
-- Complex corporate actions with no reliable divisor are removed from the statistics rather than adjusted.
-- A strong backtest does not prove a durable edge. It only shows the framework did not use information it would not have had at the time.
----
+
  
 ## Repository Structure
  
 ```
 nexus/
 ├── README.md
-├── LICENSE
-├── requirements.txt
-├── .gitignore
-├── nexus.py                 # full pipeline (rename to match your file)
-├── data/                    # competition data, not committed (see below)
+├── nexus.py                
 ├── results/
-│   └── equity_curve.png     # cumulative PnL vs Buy & Hold
 └── report/
     └── Nexus_ALPHA_Report.pdf
 ```
  
----
- 
-## Getting Started
- 
-```bash
-git clone https://github.com/<your-username>/nexus.git
-cd nexus
-python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
- 
-Place the competition-provided OHLCV files for the 20-stock universe in `data/`, then run:
- 
-```bash
-python nexus.py
-```
- 
-> The dataset belongs to the Takneek organisers and is not included in this repository.
  
 ---
