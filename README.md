@@ -3,7 +3,7 @@
 A multi-strategy quantitative trading framework built for the **Zenith Problem Statement (ALPHA)** at **Takneek 2026**, IIT Kanpur. It allocates capital across a 20-stock universe using six independent alpha sleeves, a cost-aware Mean-CVaR allocator, a machine-learning risk overlay and an event-driven backtester.
  
  
-## Highlights
+## Results
  
 | Metric | Nexus | Buy & Hold | Excess |
 |---|---|---|---|
@@ -77,23 +77,12 @@ Trade a universe of **20 equities** starting with **INR 2,000,000** (20 x 100,00
 - **Final controls:** per-name cap, signal and weight smoothing, trailing-stop quarantine with cooldown, a no-trade band, and independent long and short exposure projection.
 ### Backtester
  
-- One-bar execution delay is structural: targets are stored as pending and executed at the next open.
-- Whole-share accounting with explicit cash; sells are processed before buys.
-- A no-trade band skips small rebalances unless they reduce risk.
-- Long and short exposure are checked at both open and close, and reduced if they approach the limit.
-- Fixed random seed and no wall-clock-dependent logic, so runs are reproducible.
-
- 
 ## Repository Structure
  
 ```
 nexus/
 ├── README.md
 ├── nexus.py                
-├── results/
 └── report/
     └── Nexus_ALPHA_Report.pdf
-```
- 
- 
----
+
